@@ -540,7 +540,7 @@ class Order extends Authenticatable
         ->orderBy('orders.id','DESC')
         ->take($take)
         ->paginate(20);
-        dd($data);
+        
     }else {
         $take  = $type ? 15 : "";
 

@@ -227,12 +227,15 @@ class ApiController extends Controller {
 
 	public function search($query,$type,$city)
 	{
-		try {
-			$user = new Item;
+		$user = new Item;
 			return response()->json(['data' => $user->getItemSeach($query,$type,$city)]);
-		} catch (\Exception $th) {
-			return response()->json(['data' => 'error', 'error' => $th->getMessage()]);
-		}
+  
+		// try {
+		// 	$user = new Item;
+		// 	return response()->json(['data' => $user->getItemSeach($query,$type,$city)]);
+		// } catch (\Exception $th) {
+		// 	return response()->json(['data' => 'error', 'error' => $th->getMessage()]);
+		// }
 	}
 
 	public function SearchCat($city_id)

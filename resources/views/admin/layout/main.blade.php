@@ -2,28 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-touch-fullscreen" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>@yield('title')</title>
-<link rel="icon" type="image/x-icon" href="{{Asset('assets/img/logo.png') }}"/>
-<link rel="icon" href="{{Asset('assets/img/logo.png')}}" type="image/png" sizes="16x16">
-<link rel="stylesheet" href="{{Asset('assets/vendor/pace/pace.css')}}">
-<script src="{{Asset('assets/vendor/pace/pace.min.js')}}"></script>
-<link rel="stylesheet" type="text/css" href="{{Asset('assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{Asset('assets/vendor/jquery-scrollbar/jquery.scrollbar.css')}}">
-<link rel="stylesheet" href="{{Asset('assets/vendor/select2/css/select2.min.css')}}">
-<link rel="stylesheet" href="{{Asset('assets/vendor/jquery-ui/jquery-ui.min.css')}}">
-<link rel="stylesheet" href="{{Asset('assets/vendor/daterangepicker/daterangepicker.css')}}">
-<link rel="stylesheet" href="{{Asset('assets/vendor/timepicker/bootstrap-timepicker.min.css')}}">
-<link href="https://fonts.googleapis.com/css?family=Hind+Vadodara:400,500,600" rel="stylesheet">
-<link rel="stylesheet" href="{{Asset('assets/fonts/jost/jost.css')}}">
-<link rel="stylesheet" type="text/css" href="{{Asset('assets/fonts/materialdesignicons/materialdesignicons.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{Asset('assets/css/atmos.css?v=')}}<?php echo time(); ?>">
-<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>@yield('title')</title>
+    <link rel="icon" type="image/x-icon" href="{{Asset('assets/img/logo.png') }}"/>
+    <link rel="icon" href="{{Asset('assets/img/logo.png')}}" type="image/png" sizes="16x16">
+    <link rel="stylesheet" href="{{Asset('assets/vendor/pace/pace.css')}}">
+    <script src="{{Asset('assets/vendor/pace/pace.min.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{Asset('assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{Asset('assets/vendor/jquery-scrollbar/jquery.scrollbar.css')}}">
+    <link rel="stylesheet" href="{{Asset('assets/vendor/select2/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{Asset('assets/vendor/jquery-ui/jquery-ui.min.css')}}">
+    <link rel="stylesheet" href="{{Asset('assets/vendor/daterangepicker/daterangepicker.css')}}">
+    <link rel="stylesheet" href="{{Asset('assets/vendor/timepicker/bootstrap-timepicker.min.css')}}">
+    <link href="https://fonts.googleapis.com/css?family=Hind+Vadodara:400,500,600" rel="stylesheet">
+    <link rel="stylesheet" href="{{Asset('assets/fonts/jost/jost.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{Asset('assets/fonts/materialdesignicons/materialdesignicons.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{Asset('assets/css/atmos.css?v=')}}<?php echo time(); ?>">
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
-@yield('css')
+    @yield('css')
 
 
 </head>

@@ -177,8 +177,10 @@ return [
         App\Providers\RouteServiceProvider::class, 
  
         /**
-         * QR Generate
+         * Typesense Service Providers...
          */
+        Typesense\LaravelTypesense\TypesenseServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
     ],
 
     /*

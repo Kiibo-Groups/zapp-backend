@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Providers;
-
-use App\Models\AppSetting;
+ 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 
@@ -25,13 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        try {
-            $app = AppSetting::first();
-            Paginator::useBootstrap();
-            
-            view()->share('app', $app);
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+       //
+       Paginator::useBootstrap();
     }
 }

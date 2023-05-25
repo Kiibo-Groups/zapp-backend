@@ -4,13 +4,77 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
+use Laravel\Scout\Searchable;
+use Typesense\LaravelTypesense\Concerns\HasScopedApiKey;
+use Typesense\LaravelTypesense\Interfaces\TypesenseDocument;
+
 use Validator;
 use Auth;
 use Excel;
 use DB;
-class Item extends Authenticatable
+class Item extends Authenticatable implements TypesenseDocument
 {
+    
+    use Searchable, HasScopedApiKey;
+
     protected $table = "item";
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return array_merge(
+            $this->toArray(), 
+            [
+                // Cast id to string and turn created_at into an int32 timestamp
+                // in order to maintain compatibility with the Typesense index definition below
+                'id' => (string) $this->id,
+                'created_at' => $this->created_at->timestamp,
+            ]
+        );
+    }
+
+     /**
+     * The Typesense schema to be created.
+     *
+     * @return array
+     */
+    public function getCollectionSchema(): array {
+        return [
+            'name' => $this->searchableAs(),
+            'fields' => [
+                [
+                    'name' => 'id',
+                    'type' => 'string',
+                ],
+                [
+                    'name' => 'name',
+                    'type' => 'string',
+                ],
+                [
+                    'name' => 'created_at',
+                    'type' => 'int64',
+                ],
+            ],
+            'default_sorting_field' => 'created_at',
+        ];
+    }
+
+     /**
+     * The fields to be queried against. See https://typesense.org/docs/0.24.0/api/search.html.
+     *
+     * @return array
+     */
+    public function typesenseQueryBy(): array {
+        return [
+            'name',
+        ];
+    }    
+
     /*
     |----------------------------------------------------------------
     |   Validation Rules and Validate data for add & Update Records
@@ -320,126 +384,95 @@ class Item extends Authenticatable
 
     function getItemSeach($val, $type, $city_id)
     {
-
-        // Primer Filtro
-        $cates  = Item::where(function($query) use($city_id,$val){
-                // Que el status del producto este acitov
-                $query->where('status',0);
-                // Busqueda por LIKE
-                if(isset($val))
-                {
-                    $q   = strtolower($val);
-                    $query->whereRaw('Lower(name) like "%' . $q . '%"');
-                }
-        })->limit(15) // Limite de 15 elementos.
-        ->select('category_id')->distinct()->get(); // Lo categorizamos por categoria.
+ 
 
         $currency   = Admin::find(1)->currency; 
         $data     = [];
         $price    = 0;  
         $last_price = 0;
 
-
-        foreach($cates as $cate)
+        // Filtro
+        $items = Item::search($val)->where('status',0)->paginate(8);
+        $count = [];
+        
+        foreach($items as $i)
         {
-            // Segundo Filtro
-            $items = Item::where(function($query) use($cate,$val){
-                // Status activo del producto
-                $query->where('status',0);
-                // Categoria especifica del primer filtro
-                $query->where('category_id',$cate->category_id);
 
-                // Busqueda LIKE
-                if(isset($val))
-                {
-                    $q   = strtolower($val);
-                    $query->whereRaw('Lower(name) like "%' . $q . '%"');
-                }
-            })->limit(15)->orderBy('sort_no','DESC')->get();
-            
-            $count = [];
-            
-            foreach($items as $i)
+            $IPrice = round((intval(str_replace('$','',$i->small_price))),2);
+            $lastPrice = round((intval(str_replace("$","",$i->last_price))),2);
+
+            if($i->small_price)
             {
- 
-                $IPrice = round((intval(str_replace('$','',$i->small_price))),2);
-                $lastPrice = round((intval(str_replace("$","",$i->last_price))),2);
-
-                if($i->small_price)
-                {
-                    $price = $IPrice;
-                    $count[] = $IPrice;
-                }
-
-                if ($i->last_price) {
-                    $last_price = $lastPrice;
-                }
-
-                $img = [];
-                
-                // Obtenemos la Imagen
-                if ($i->type_img == 0) { // Imagen desde el dash
-                    foreach (explode(",",$i->img) as $key) 
-                    {
-                        $img[] = $key ? Asset('upload/item/'.$key) : null;
-                    }
-                }else { // Imagen desde import (URL)
-                    // Validamos si existe la imagen en la URL especificada
-                    foreach (explode(",",$i->img) as $key) 
-                    { 
-                        // $img[] = $i->img ? $key : null;
-                        if ($i->img) {
-                            if ($this->url_exists($key)) {
-                                $img[] = $key;
-                            }else { $img[] = asset('/assets/img/not_found.jpg'); }
-                        }else { $img[] = asset('/assets/img/not_found.jpg'); }
-                    }
-                } 
-                // Verificamos el negocio
-                $store = User::find($i->store_id);
-
-                /****** Rating *******/
-                $totalRate    = Rate::where('product_id',$i->id)->count();
-                $totalRateSum = Rate::where('product_id',$i->id)->sum('star');
-                
-
-                if($totalRate > 0)
-                {
-                    $avg          = $totalRateSum / $totalRate;
-                }
-                else
-                {
-                    $avg           = 0 ;
-                }
-                /****** Rating *******/
-
-                // Rellenamos el Item de productos y categorias
-                $item[] = [
-                    'id'            => $i->id,
-                    'rating'        => $avg,
-                    'name'          => $this->getLangItem($i->id,0)['name'],
-                    'img'           => $img,
-                    'description'   => $this->getLangItem($i->id,0)['desc'],
-                    's_price'       => $IPrice,
-                    'price'         => $price,
-                    'last_price'    => $last_price,
-                    'count'         => count($count),
-                    'addon'         => $this->addon($i->id),
-                    'status'        => $i->status,
-                    'store'         => $store,
-                ];
+                $price = $IPrice;
+                $count[] = $IPrice;
             }
 
-            $data[] = [
-                'id' => $cate->category_id,
-                'sort_no' => $this->getLangCate($cate->category_id,0)['sort_no'],
-                'cate_name' => $this->getLangCate($cate->category_id,0)['name'],
-                'items' => $item
+            if ($i->last_price) {
+                $last_price = $lastPrice;
+            }
+
+            $img = [];
+            // // Obtenemos la Imagen
+            // if ($i->type_img == 0) { // Imagen desde el dash
+            //     foreach (explode(",",$i->img) as $key) 
+            //     {
+            //         $img[] = $key ? Asset('upload/item/'.$key) : null;
+            //     }
+            // }else { // Imagen desde import (URL)
+            //     // Validamos si existe la imagen en la URL especificada
+            //     foreach (explode(",",$i->img) as $key) 
+            //     { 
+            //         // $img[] = $i->img ? $key : null;
+            //         if (file_exists($i->img)) {
+            //             $img[] = $key;
+            //         }else { $img[] = asset('/assets/img/not_found.jpg'); }
+ 
+            //     }
+            // } 
+          
+            // Verificamos el negocio
+            $store = User::find($i->store_id);
+
+            /****** Rating *******/
+            $totalRate    = Rate::where('product_id',$i->id)->count();
+            $totalRateSum = Rate::where('product_id',$i->id)->sum('star');
+            
+
+            if($totalRate > 0)
+            {
+                $avg          = $totalRateSum / $totalRate;
+            }
+            else
+            {
+                $avg           = 0 ;
+            }
+            /****** Rating *******/
+
+            // Rellenamos el Item de productos y categorias
+            $item[] = [
+                'id'            => $i->id,
+                'rating'        => $avg,
+                'name'          => $this->getLangItem($i->id,0)['name'],
+                'img'           => $img,
+                'description'   => $this->getLangItem($i->id,0)['desc'],
+                's_price'       => $IPrice,
+                'price'         => $price,
+                'last_price'    => $last_price,
+                'count'         => count($count),
+                'addon'         => $this->addon($i->id),
+                'status'        => $i->status,
+                'store'         => $store,
             ];
-
-            unset($item);
-
         }
+
+        $data[] = [
+            'id' => $i->category_id,
+            'sort_no' => $this->getLangCate($i->category_id,0)['sort_no'],
+            'cate_name' => $this->getLangCate($i->category_id,0)['name'],
+            'items' => $item
+        ];
+
+        unset($item);
 
         return $data;
     }
@@ -550,7 +583,7 @@ class Item extends Authenticatable
 
         // Descomentar si tu servidor requiere un user-agent, referrer u otra configuración específica
         // $agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36';
-        // curl_setopt($ch, CURLOPT_USERAGENT, $agent)
+        // curl_setopt($ch, CURLOPT_USERAGENT, $agent);
 
         $data = curl_exec( $ch );
 

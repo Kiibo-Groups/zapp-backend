@@ -218,7 +218,7 @@ class User extends Authenticatable
         })->join('city','users.city_id','=','city.id')
                    ->leftjoin('categorystore','users.type','=','categorystore.id')
                    ->select('categorystore.name as Cat','users.*','city.name as city')
-                   ->orderBy('users.id','DESC')->get();
+                   ->orderBy('users.id','DESC')->paginate(10);
     }
 
     public function getAppData($city_id,$trending = false)
@@ -379,14 +379,7 @@ class User extends Authenticatable
         $user_id    = isset($_GET['user_id']) ? $_GET['user_id'] : 0;
 
         $res  = User::where('id',$id)->orderBy('id','DESC')->get();
-        
-        // select('users.*',DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
-        //         * cos(radians(users.lat)) 
-        //         * cos(radians(users.lng) - radians(" . $lon . ")) 
-        //         + sin(radians(" .$lat. ")) 
-        //         * sin(radians(users.lat))) AS distance"))
-        //         ->
-
+  
         $data = [];
 
         foreach($res as $row)
@@ -433,7 +426,6 @@ class User extends Authenticatable
 
             $data = [
                 'id'            => $row->id,
-                 
                 'title'         => $this->getLang($row->id,0)['name'],
                 'img'           => Asset('upload/user/'.$row->img),
                 'logo'           => Asset('upload/user/logo/'.$row->logo),
@@ -455,12 +447,7 @@ class User extends Authenticatable
                 'subtype'       => $row->subtype,
                 'currency'      => $currency,
                 'items'         => $this->menuItem($row->id,$row->c_type,$row->c_value),
-                'items_trend'   => $this->menuTrend($row->id),
-                // 'max_distance'  => $this->GetMax_distance($row->id,$row->distance_max,$lat,$lon),
-                // 'delivery_charges_value' => $this->SetCommShip($row->id,$row->p_staff,$row->distance_max,$row->distance),
-                // 'distance'      => bcdiv($row->distance,'1',2),
-                // "distance_max"  => $row->distance_max,
-                // 'km'            => round($row->distance,2),
+                'items_trend'   => $this->menuTrend($row->id), 
                 'favorite'      => $favorite
             ];
             
@@ -1291,13 +1278,26 @@ class User extends Authenticatable
                     { 
                         // $img[] = $i->img ? $key : null;
                         if ($i->img) {
-                            if ($this->url_exists($key)) {
+                            if (file_exists($i->img)) {
                                 $img[] = $key;
                             }else { $img[] = asset('/assets/img/not_found.jpg'); }
                         }else { $img[] = asset('/assets/img/not_found.jpg'); }
                     }
                 }
 
+                /****** Rating *******/
+                    $totalRate    = Rate::where('product_id',$i->id)->count();
+                    $totalRateSum = Rate::where('product_id',$i->id)->sum('star');
+                /****** Rating *******/
+
+                if($totalRate > 0)
+                {
+                    $avg          = $totalRateSum / $totalRate;
+                }
+                else
+                {
+                    $avg           = 0 ;
+                }
 
                 // Items
                 $item[] = [
@@ -1311,7 +1311,8 @@ class User extends Authenticatable
                     'count'         => count($count),
                     'nonveg'        => $i->nonveg,
                     'addon'         => $this->addon($i->id),
-                    'status'        => $i->status
+                    'status'        => $i->status,
+                    'rating'        => $avg
                 ];
 
             }
