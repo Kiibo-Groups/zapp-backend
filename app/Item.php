@@ -135,7 +135,7 @@ class Item extends Authenticatable implements TypesenseDocument
                 foreach ($pic as $key => $image) 
                 {
                     $filename   = time().rand(111,699).'.' .$image->getClientOriginalExtension(); 
-                    $image->move("upload/item/", $filename);   
+                    $image->move("public/upload/item/", $filename);   
                     $picsArray[] = $filename;
                 }
 
@@ -156,7 +156,7 @@ class Item extends Authenticatable implements TypesenseDocument
                     foreach ($pic as $key => $image) 
                     {
                         $filename   = time().rand(111,699).'.' .$image->getClientOriginalExtension(); 
-                        $image->move("upload/item/", $filename);   
+                        $image->move("public/upload/item/", $filename);   
                         $picsArray[] = $filename;
                     }
 
@@ -171,7 +171,7 @@ class Item extends Authenticatable implements TypesenseDocument
                     foreach ($pic as $key => $image) 
                     {
                         $filename   = time().rand(111,699).'.' .$image->getClientOriginalExtension(); 
-                        $image->move("upload/item/", $filename);   
+                        $image->move("public/upload/item/", $filename);   
                         $picsArray[] = $filename;
                     }
 
