@@ -152,7 +152,7 @@
                 </a>
             </li>
             <li>
-                <a href="/upload/order/delivery/delivery_end_{{ $row->id }}.jpg" target="_blank"  class="dropdown-item">
+                <a href="{{ Asset('upload/order/delivery/delivery_end_'.$row->id.'.jpg') }}" target="_blank"  class="dropdown-item">
                     Ver Imagen de entrega
                 </a>
             </li>
