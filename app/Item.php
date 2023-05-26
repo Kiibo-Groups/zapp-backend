@@ -412,23 +412,23 @@ class Item extends Authenticatable implements TypesenseDocument
             }
 
             $img = [];
-            // // Obtenemos la Imagen
-            // if ($i->type_img == 0) { // Imagen desde el dash
-            //     foreach (explode(",",$i->img) as $key) 
-            //     {
-            //         $img[] = $key ? Asset('upload/item/'.$key) : null;
-            //     }
-            // }else { // Imagen desde import (URL)
-            //     // Validamos si existe la imagen en la URL especificada
-            //     foreach (explode(",",$i->img) as $key) 
-            //     { 
-            //         // $img[] = $i->img ? $key : null;
-            //         if (file_exists($i->img)) {
-            //             $img[] = $key;
-            //         }else { $img[] = asset('/assets/img/not_found.jpg'); }
+            // Obtenemos la Imagen
+            if ($i->type_img == 0) { // Imagen desde el dash
+                foreach (explode(",",$i->img) as $key) 
+                {
+                    $img[] = $key ? Asset('upload/item/'.$key) : null;
+                }
+            }else { // Imagen desde import (URL)
+                // Validamos si existe la imagen en la URL especificada
+                foreach (explode(",",$i->img) as $key) 
+                { 
+                    $img[] = $i->img ? $key : null;
+                    // if (file_exists($key)) {
+                    //     $img[] = $key;
+                    // }else { $img[] = asset('/assets/img/not_found.jpg'); }
  
-            //     }
-            // } 
+                }
+            } 
           
             // Verificamos el negocio
             $store = User::find($i->store_id);

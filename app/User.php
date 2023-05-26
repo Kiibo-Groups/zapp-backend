@@ -1232,6 +1232,7 @@ class User extends Authenticatable
     public function menuItem($id,$type,$value)
     {
         $data     = [];
+        $item     = [];
         // 
         $cates    = Item::where('store_id',$id)->select('category_id')->distinct()->get();
         $price    = 0;
@@ -1277,12 +1278,12 @@ class User extends Authenticatable
                     // Validamos si existe la imagen en la URL especificada
                     foreach (explode(",",$i->img) as $key) 
                     { 
-                        // $img[] = $i->img ? $key : null;
-                        if ($i->img) {
-                            if (file_exists($i->img)) {
-                                $img[] = $key;
-                            }else { $img[] = asset('/assets/img/not_found.jpg'); }
-                        }else { $img[] = asset('/assets/img/not_found.jpg'); }
+                        $img[] = $i->img ? $key : null;
+                        // if ($i->img) {
+                        //     if ($this->url_exists($key)) {
+                        //         $img[] = $key;
+                        //     }else { $img[] = asset('/assets/img/not_found.jpg'); }
+                        // }else { $img[] = asset('/assets/img/not_found.jpg'); }
                     }
                 }
 
@@ -1324,7 +1325,7 @@ class User extends Authenticatable
                 0)['sort_no'],
                 'cate_name' => $this->getLangCate($cate->category_id,
                 0)['name'],
-                'items' => $item
+                'items' => (isset($item)) ? $item : []
             ];
 
             unset($item);

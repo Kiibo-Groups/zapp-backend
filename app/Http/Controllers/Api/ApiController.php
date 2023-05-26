@@ -188,6 +188,7 @@ class ApiController extends Controller {
 
 	public function getStore($id)
 	{ 
+
 		try {
 			$store   = new User;
 			return response()->json(['data' => $store->getStore($id)]);
