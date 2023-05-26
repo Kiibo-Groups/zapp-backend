@@ -1232,7 +1232,7 @@ class User extends Authenticatable
     public function menuItem($id,$type,$value)
     {
         $data     = [];
-        // where('status',0)->
+        // 
         $cates    = Item::where('store_id',$id)->select('category_id')->distinct()->get();
         $price    = 0;
         $last_price = 0;
@@ -1242,6 +1242,7 @@ class User extends Authenticatable
             // where('status',0)->
             $items = Item::where('category_id',$cate->category_id)
             ->where('store_id',$id)
+            ->where('status',0)
             ->orderBy('sort_no','ASC')
             ->get();
             
