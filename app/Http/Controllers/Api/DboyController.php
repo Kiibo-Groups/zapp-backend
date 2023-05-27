@@ -138,7 +138,6 @@ class DboyController extends Controller {
 				$this->startRideComm();
 				return response()->json(['data' => 'done']);		
 			}else {
-
 				$res 		 = Order::find($_GET['id']);
 				$res->status = $_GET['status'];
 				$res->save();
