@@ -167,7 +167,7 @@ function confirmAlert(url)
 
 function ClipToDeepLink(link,type) {
     // Get the text field
-    var copyText = 'https://zappstore.com.c/'+type+'/'+link;
+    var copyText = 'https://zappstore.com.co/'+type+'/'+link;
 
     // Copy the text inside the text field
     navigator.clipboard.writeText(copyText);
