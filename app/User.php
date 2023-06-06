@@ -218,7 +218,7 @@ class User extends Authenticatable
         })->join('city','users.city_id','=','city.id')
                    ->leftjoin('categorystore','users.type','=','categorystore.id')
                    ->select('categorystore.name as Cat','users.*','city.name as city')
-                   ->orderBy('users.id','DESC')->paginate(10);
+                   ->orderBy('users.id','DESC')->get();
     }
 
     public function getAppData($city_id,$trending = false)
