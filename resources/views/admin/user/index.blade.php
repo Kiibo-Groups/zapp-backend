@@ -157,8 +157,7 @@
                         </table>
                     </div>
                 </div>
-
-                {!! $data->appends(request()->except('page'))->links() !!}
+ 
             </div>
         </div>
     </div>
