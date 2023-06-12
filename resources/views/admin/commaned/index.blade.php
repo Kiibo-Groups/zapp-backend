@@ -56,7 +56,7 @@
                                         {{ number_format(round($row->total,0),2,".",",") }}
                                     </td>
                                     <td width="18%">
-                                        @if($row->payment_method == 0)
+                                        @if($row->payment_method == 1)
                                             <span style="color:green;">Pago en Efectivo</span>
                                         @else 
                                             <span style="color:green;">Medios Electronicos</span>

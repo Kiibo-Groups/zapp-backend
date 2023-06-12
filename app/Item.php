@@ -48,8 +48,9 @@ class Item extends Authenticatable implements TypesenseDocument
         return [
             'name' => $this->searchableAs(),
             'fields' => [
+               
                 [
-                    'name' => 'name',
+                    'name' => 'description',
                     'type' => 'string',
                 ]
             ],
@@ -377,7 +378,7 @@ class Item extends Authenticatable implements TypesenseDocument
 
     function getItemSeach($val, $type, $city_id)
     { 
-
+        $val = preg_replace('/,./', '', $val);
         $currency   = Admin::find(1)->currency; 
         $data     = [];
         $price    = 0;  
@@ -446,6 +447,7 @@ class Item extends Authenticatable implements TypesenseDocument
                     // Rellenamos el Item de productos y categorias
                     $item[] = [
                         'id'            => $i->id,
+                        'cate_name'     => $this->getLangCate($i->category_id,0)['name'],
                         'rating'        => $avg,
                         'name'          => $this->getLangItem($i->id,0)['name'],
                         'img'           => $img,
@@ -462,13 +464,11 @@ class Item extends Authenticatable implements TypesenseDocument
             }
         }
 
+        
         $data[] = [
-            //'id' => $i->category_id,
-            //'sort_no' => $this->getLangCate($i->category_id,0)['sort_no'],
-            'cate_name' => (count($item) > 0) ? $this->getLangCate($i->category_id,0)['name'] : [],
             'items' => $item
         ];
-
+        
         unset($item);
 
         return $data;
@@ -476,18 +476,15 @@ class Item extends Authenticatable implements TypesenseDocument
 
     function getAllSeach($val)
     {
+        $val = preg_replace('/,./', '', $val);
         $currency   = Admin::find(1)->currency; 
         $data     = [];
         $price    = 0;  
         $last_price = 0;
 
+        // $items = Item::search($val)->get();
         // Filtro
-        $items = Item::where(function($query) use($val) {
-            // Que el status del producto este acito
-            $query->where('status',0);
-            // Busqueda por LIKE
-            $query->whereRaw('Lower(name) LIKE "%'. strtolower($val) .'%"');
-        })->get();
+        $items = Item::search($val)->where('status',0)->get();
 
         $count = [];
         $item  = [];
@@ -551,6 +548,7 @@ class Item extends Authenticatable implements TypesenseDocument
                     $item[] = [
                         'id'            => $i->id,
                         'categoria'     => $this->getLangCate($i->category_id,0)['name'],
+                        'category_id'   => $i->category_id,
                         'rating'        => $avg,
                         'name'          => $this->getLangItem($i->id,0)['name'],
                         'img'           => $img,
@@ -565,13 +563,101 @@ class Item extends Authenticatable implements TypesenseDocument
                     ];
                 }
             }
-        }
+        } 
 
-        $data = $item;
+        $i = null;
+  
+        if (count($item) == 1) {
+            $itemIq = $item[0];
+            $itemsExt = Item::where(function($query) use($itemIq) {
+                    $query->where('status', 0);
+                    $query->whereNot('id',$itemIq['id']);
+                    $query->where('category_id',$itemIq['category_id']);
+            })->get();
 
-        unset($item);
+            $itemExt  = [];
+            foreach($itemsExt as $i)
+            {
+
+                $IPrice = round((intval(str_replace('$','',$i->small_price))),2);
+                $lastPrice = round((intval(str_replace("$","",$i->last_price))),2);
+
+                if($i->small_price)
+                {
+                    $price = $IPrice;
+                    $count[] = $IPrice;
+                }
+
+                if ($i->last_price) {
+                    $last_price = $lastPrice;
+                }
+
+                $img = [];
+                // Obtenemos la Imagen
+                if ($i->type_img == 0) { // Imagen desde el dash
+                    foreach (explode(",",$i->img) as $key) 
+                    {
+                        $img[] = $key ? Asset('upload/item/'.$key) : null;
+                    }
+                }else { // Imagen desde import (URL)
+                    // Validamos si existe la imagen en la URL especificada
+                    foreach (explode(",",$i->img) as $key) 
+                    { 
+                        $img[] = $i->img ? $key : null;
+                        // if (file_exists($key)) {
+                        //     $img[] = $key;
+                        // }else { $img[] = asset('/assets/img/not_found.jpg'); }
+    
+                    }
+                } 
+            
+                // Verificamos el negocio
+                $store = User::find($i->store_id);
+
+                /****** Rating *******/
+                $totalRate    = Rate::where('product_id',$i->id)->count();
+                $totalRateSum = Rate::where('product_id',$i->id)->sum('star');
+                
+
+                if($totalRate > 0)
+                {
+                    $avg          = $totalRateSum / $totalRate;
+                }
+                else
+                {
+                    $avg           = 0 ;
+                }
+                /****** Rating *******/
+
+                if ($store) {
+                    if ($i->status == 0) { // Activo
+                        // Rellenamos el Item de productos y categorias
+                        $item[] = [
+                            'id'            => $i->id,
+                            'categoria'     => $this->getLangCate($i->category_id,0)['name'],
+                            'category_id'   => $i->category_id,
+                            'rating'        => $avg,
+                            'name'          => $this->getLangItem($i->id,0)['name'],
+                            'img'           => $img,
+                            'description'   => $this->getLangItem($i->id,0)['desc'],
+                            's_price'       => $IPrice,
+                            'price'         => $price,
+                            'last_price'    => $last_price,
+                            'count'         => count($count),
+                            'addon'         => $this->addon($i->id),
+                            'status'        => $i->status,
+                            'store'         => $store,
+                        ];
+                    }
+                }
+            }
  
+        }
         
+        
+        $data = $item;
+        unset($item);
+
         return $data;
     }
 
