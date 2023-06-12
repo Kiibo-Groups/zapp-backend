@@ -695,22 +695,32 @@ class Delivery extends Authenticatable
 
     function delStaffOrder($order_id)
     {
-        // Seteamos la tabla
-        Order_staff::where('order_id',$order_id)->delete();
-
+        // Checamos si el pedido ya fue tomado
         $order = Order::find($order_id);
 
-        $order->status = 1;
-        $order->save();
-        
-        // Notificamos al negocio que no se encontraron repartidores
-        $msg = "No hemos encontrado un repartidor disponible para tu solicitud, por favor vuelve a intentarlo";
-        $title = "No encontramos repartidores!!";
-        app('App\Http\Controllers\Controller')->sendPushS($title,$msg,$order->store_id);
-        
-        return [
-            'status' => 'done'
-        ];
+        if ($order->d_boy != 0) {
+            return [
+                'status' => 'in_rute'
+            ];
+        }else {
+
+            // Seteamos la tabla
+            Order_staff::where('order_id',$order_id)->delete();
+
+            $order = Order::find($order_id);
+
+            $order->status = 1;
+            $order->save();
+            
+            // Notificamos al negocio que no se encontraron repartidores
+            $msg = "No hemos encontrado un repartidor disponible para tu solicitud, por favor vuelve a intentarlo";
+            $title = "No encontramos repartidores!!";
+            app('App\Http\Controllers\Controller')->sendPushS($title,$msg,$order->store_id);
+            
+            return [
+                'status' => 'done'
+            ];
+        }
     }
 
     function delStaffEvent($order_id)

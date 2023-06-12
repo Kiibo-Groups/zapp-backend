@@ -514,29 +514,42 @@ class Commaned extends Authenticatable
 
     function delStaffEvent($event_id)
     {
-        // Seteamos la tabla
-        Order_staff::where('event_id',$event_id)->delete();
+         // Checamos si el pedido ya fue tomado
+         $event = Commaned::find($event_id);
 
-        // Marcamos como repartidor no encontrado status = 3
-        $event = Commaned::find($event_id);
-        
-        if ($event->status == 0) {
-            $event->status = 3;
-            $event->save();   
-            // Notificamos al negocio que no se encontraron repartidores
-            $msg = "No hemos encontrado un repartidor disponible para tu solicitud, por favor vuelve a intentarlo";
-            $title = "No encontramos repartidores!!";
-            app('App\Http\Controllers\Controller')->sendPush($title,$msg,$event->user_id);
-        }else if ($event->status == 2) { // ya se habia cancelado
-            // Notificamos al negocio que no se encontraron repartidores
-            $msg = "Lamentamos que tuvieras que cancelar, te invitamos a probar nuevamente nuestro servicio y/o comunicate con nosotros en caso de algun problema.";
-            $title = "Solicitud cancelada!!";
-            app('App\Http\Controllers\Controller')->sendPush($title,$msg,$event->user_id);
+         if ($event->d_boy != 0) {
+             return [
+                 'status' => 'in_rute'
+             ];
+         }else if ($event->status == 2) { // el pedido fue cancelado
+             return [
+                 'status' => 'cancel'
+             ];
+         }else {
+            // Seteamos la tabla
+            Order_staff::where('event_id',$event_id)->delete();
+
+            // Marcamos como repartidor no encontrado status = 3
+            $event = Commaned::find($event_id);
+            
+            if ($event->status == 0) {
+                $event->status = 3;
+                $event->save();   
+                // Notificamos al negocio que no se encontraron repartidores
+                $msg = "No hemos encontrado un repartidor disponible para tu solicitud, por favor vuelve a intentarlo";
+                $title = "No encontramos repartidores!!";
+                app('App\Http\Controllers\Controller')->sendPush($title,$msg,$event->user_id);
+            }else if ($event->status == 2) { // ya se habia cancelado
+                // Notificamos al negocio que no se encontraron repartidores
+                $msg = "Lamentamos que tuvieras que cancelar, te invitamos a probar nuevamente nuestro servicio y/o comunicate con nosotros en caso de algun problema.";
+                $title = "Solicitud cancelada!!";
+                app('App\Http\Controllers\Controller')->sendPush($title,$msg,$event->user_id);
+            }
+            
+            return [
+                'status' => 'done'
+            ];
         }
-        
-        return [
-            'status' => 'done'
-        ];
     }
 
     /**
