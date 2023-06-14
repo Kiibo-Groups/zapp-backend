@@ -195,7 +195,7 @@ class Cart extends Authenticatable
             $discount = 0;
         }
 
-       $total      = ($item_total - $discount) + $d_charges['costs_ship'];
+       $total      = ($item_total - $discount) + 0;
        $sid        = Cart::where('cart_no',$cartNo)->select('store_id')->distinct()->first();
 
        
@@ -204,14 +204,7 @@ class Cart extends Authenticatable
        $purse_x_table = 0;
        $purse_x_pickup = 0;
        $purse_x_delivery = 0;
-       
-       if (isset($sid)) {
-           $store_d  = User::find($sid->store_id);
-
-           $purse_x_table = ($subTotal * $store_d->purse_x_table) / 100; 
-           $purse_x_pickup = ($subTotal * $store_d->purse_x_pickup) / 100;
-           $purse_x_delivery = ($subTotal * $store_d->purse_x_delivery) / 100;
-       }
+    
 
         //  Obtenemos la comision por ticket
         $service_fee = 0; 
@@ -237,7 +230,6 @@ class Cart extends Authenticatable
         $store_status =  isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['open_status'] : false;
        
 
-
         return [
             'data'           => $data,
             'item_total'     => $item_total,
@@ -251,7 +243,7 @@ class Cart extends Authenticatable
             'purse_x_table'  => $purse_x_table,
             'purse_x_pickup' => $purse_x_pickup,
             'purse_x_delivery' => $purse_x_delivery,
-            'store'          => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['name'] : [],
+            'store'           => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['name'] : [],
             'store_next_open' => (!$store_status) ? isset($sid->store_id) ? $op_time->ViewNextTime($sid->store_id) : '' : '',
             'store_id'       => isset($sid->store_id) ? $sid->store_id : 0,
             'store_status'   => $store_status,

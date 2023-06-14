@@ -102,11 +102,13 @@ class ApiController extends Controller {
 	{
 		$text    = new Text;
 		$l 		 = Language::find($_GET['lid']);
+		$items   = new Item;
 
 		$data = [
 			'text'		=> $text->getAppData($_GET['lid']),
 			'app_type'	=> isset($l->id) ? $l->type : 0,
 			'admin'		=> Admin::find(1),
+			'items'     => Item::select('id','name')->get()
 		];
 
 		return response()->json(['data' => $data]);
@@ -138,11 +140,11 @@ class ApiController extends Controller {
 		$banner  = new Banner;
 		$user	 = new User;
 		$cats    = new CategoryStore;
-	
+		
 		$data = [
 			'admin'		=> Admin::find(1),
 			'Categorys' => $cats->ViewOrderCats(),
-			'banner'	=> $banner->getAppData($city_id,0)
+			'banner'	=> $banner->getAppData($city_id,0),
 		];
 
 		return response()->json(['data' => $data]);
@@ -315,7 +317,7 @@ class ApiController extends Controller {
 	}
 
 	public function getCart($cartNo)
-	{
+	{ 	
 		try {
 			$res = new Cart;
 			return response()->json(['data' => $res->getCart($cartNo)]);	

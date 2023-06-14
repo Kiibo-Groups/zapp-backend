@@ -386,6 +386,7 @@ class Item extends Authenticatable implements TypesenseDocument
 
         // Filtro
         $items = Item::search($val)->get();
+
         $count = [];
         $item  = [];
         
@@ -484,7 +485,10 @@ class Item extends Authenticatable implements TypesenseDocument
 
         // $items = Item::search($val)->get();
         // Filtro
-        $items = Item::search($val)->where('status',0)->get();
+        $items = Item::where(function($query) use($val) {
+            $query->where('status',0);
+            $query->whereRaw('lower(name) like "%' . strtolower($val) . '%"');
+        })->get();
 
         $count = [];
         $item  = [];
