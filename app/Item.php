@@ -485,10 +485,9 @@ class Item extends Authenticatable implements TypesenseDocument
 
         // $items = Item::search($val)->get();
         // Filtro
-        $items = Item::where(function($query) use($val) {
-            $query->where('status',0);
-            $query->whereRaw('lower(name) like "%' . strtolower($val) . '%"');
-        })->get();
+     
+
+        $items = Item::whereRaw('lower(name) like "%' . strtolower($val) . '%"')->where('status',0)->get();
 
         $count = [];
         $item  = [];
@@ -663,6 +662,7 @@ class Item extends Authenticatable implements TypesenseDocument
         unset($item);
 
         return $data;
+        
     }
 
     public function addon($id)
