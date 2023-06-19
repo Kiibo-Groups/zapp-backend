@@ -195,16 +195,16 @@ class Cart extends Authenticatable
             $discount = 0;
         }
 
-       $total      = ($item_total - $discount) + 0;
-       $sid        = Cart::where('cart_no',$cartNo)->select('store_id')->distinct()->first();
+        $total      = ($item_total - $discount) + $d_charges['costs_ship'];;
+        $sid        = Cart::where('cart_no',$cartNo)->select('store_id')->distinct()->first();
 
        
-       $subTotal = ($item_total - $discount);
-       
-       $purse_x_table = 0;
-       $purse_x_pickup = 0;
-       $purse_x_delivery = 0;
-    
+        $subTotal = ($item_total - $discount);
+        
+        $purse_x_table = 0;
+        $purse_x_pickup = 0;
+        $purse_x_delivery = 0;
+        
 
         //  Obtenemos la comision por ticket
         $service_fee = 0; 
@@ -221,7 +221,7 @@ class Cart extends Authenticatable
                 $service_fee = ($item_total * $t_value) / 100;
             }
 
-           
+        
             // Verificamos la distancia real entre usuario y comercio
             $service_nearby    = $store->GetMax_distance($row->store_id,$store->distance_max,$real_lat,$real_lng);
         } 
