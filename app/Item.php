@@ -475,9 +475,8 @@ class Item extends Authenticatable implements TypesenseDocument
         return $data;
     }
 
-    function getAllSeach($val)
-    {
-        $val = preg_replace('/,./', '', $val);
+    function getAllSeach($prod, $query)
+    { 
         $currency   = Admin::find(1)->currency; 
         $data     = [];
         $price    = 0;  
@@ -486,9 +485,13 @@ class Item extends Authenticatable implements TypesenseDocument
         // $items = Item::search($val)->get();
         // Filtro
      
-
-        $items = Item::whereRaw('lower(name) like "%' . strtolower($val) . '%"')->where('status',0)->get();
-
+ 
+        if ($prod != 'null') {
+            $items = Item::whereRaw('lower(name) = "' . strtolower($prod) .'"')->where('status',0)->get();
+        }else {
+            $items = Item::whereRaw('lower(name) like "%' . strtolower($query) . '%" or lower(description) like "% '.strtolower($query).' %"')->where('status',0)->get();
+        }
+ 
         $count = [];
         $item  = [];
         foreach($items as $i)
@@ -571,12 +574,14 @@ class Item extends Authenticatable implements TypesenseDocument
         $i = null;
   
         if (count($item) == 1) {
-            $itemIq = $item[0];
-            $itemsExt = Item::where(function($query) use($itemIq) {
-                    $query->where('status', 0);
-                    $query->whereNot('id',$itemIq['id']);
-                    $query->where('category_id',$itemIq['category_id']);
-            })->get();
+            // $itemIq = $item[0];
+            // $itemsExt = Item::where(function($query) use($itemIq) {
+            //         $query->where('status', 0);
+            //         $query->whereNot('id',$itemIq['id']);
+            //         $query->where('category_id',$itemIq['category_id']);
+            // })->get();
+ 
+            $itemsExt = Item::whereRaw('lower(name) like "%' . strtolower($query) . '%" or lower(description) like "% '.strtolower($query).' %"')->where('status',0)->get();
 
             $itemExt  = [];
             foreach($itemsExt as $i)

@@ -108,7 +108,7 @@ class ApiController extends Controller {
 			'text'		=> $text->getAppData($_GET['lid']),
 			'app_type'	=> isset($l->id) ? $l->type : 0,
 			'admin'		=> Admin::find(1),
-			'items'     => Item::select('id','name')->get()
+			'items'     => Item::select('id','name')->OrderBy('id','DESC')->get()
 		];
 
 		return response()->json(['data' => $data]);
@@ -238,11 +238,11 @@ class ApiController extends Controller {
 		}
 	}
 
-	public function viewSearch($query)
+	public function viewSearch($prod,$query)
 	{
 		try {
 			$user = new Item;
-			return response()->json(['status' => 200,'data' => $user->getAllSeach($query)]);
+			return response()->json(['status' => 200,'data' => $user->getAllSeach($prod,$query)]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error', 'error' => $th->getMessage()]);
 		}

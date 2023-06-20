@@ -27,7 +27,7 @@ Route::group(array('namespace' => 'Api'), function () {
     Route::get('getStore/{id}','ApiController@getStore');
     Route::get('getTypeDelivery/{id}','ApiController@getTypeDelivery');
     Route::get('search/{query}/{type}/{city}','ApiController@search');
-    Route::get('viewSearch/{query}','ApiController@viewSearch');
+    Route::get('viewSearch/{prod}/{query}','ApiController@viewSearch');
     Route::get('SearchCat/{city}','ApiController@SearchCat');
     Route::get('SearchFilters/{city}','ApiController@SearchFilters');
     Route::get('ViewAllCats','ApiController@ViewAllCats');
