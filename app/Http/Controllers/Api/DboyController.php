@@ -277,6 +277,11 @@ class DboyController extends Controller {
 				$staff->status_send = 0;
 				$staff->save();
 
+				// Guardamos la imagen
+				$pic = "delivery_end_".$_GET['id'].".jpg";
+				$res->pic_end_order = $pic;
+				$res->save();
+
 				// Registramos el Log
 				$logText = 'El repartidor #'.$_GET['d_boy'].' ha marcado el mandadito #'.$res->id.' como finalizado.';
 

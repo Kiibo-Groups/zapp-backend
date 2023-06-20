@@ -21,10 +21,10 @@
                                     <th>Origen</th>
                                     <th>Destino</th>
                                     <th>Repartidor</th>
-                                    <th>Envio</th>
-                                    <th>IVA</th>
+                                    <th>Envio</th> 
                                     <th>Total</th>
                                     <th>Metodo de pago</th>
+                                    <th>Fecha</th>
                                     <th style="text-align: right">Opciones</th>
                                 </tr>
                             </thead>
@@ -48,10 +48,8 @@
                                     </td>
                                     <td width="10%">
                                         {{ number_format(round($row->d_charges,0),2,".",",") }}
-                                    </td>
-                                    <td width="10%">
-                                        {{ number_format(round($row->iva_charges,0),2,".",",") }}
-                                    </td>
+                                        <small>IVA({{ number_format(round($row->iva_charges,0),2,".",",") }})</small>
+                                    </td> 
                                     <td width="10%">
                                         {{ number_format(round($row->total,0),2,".",",") }}
                                     </td>
@@ -62,6 +60,7 @@
                                             <span style="color:green;">Medios Electronicos</span>
                                         @endif
                                     </td>
+                                    <td>{{ $row->created_at }}</td>
                                     <td width="8%" style="text-align: right">
                                         @if($row->status == 1)
                                          <span style="color:green;">Pedido Aceptado</span>

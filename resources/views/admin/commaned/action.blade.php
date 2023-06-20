@@ -31,7 +31,7 @@
             <a href="{{ Asset($link.$row->id.'/edit') }}" class="dropdown-item">
                 Ver solicitud    
             </a><hr>
-            <a href="{{ Asset('/upload/order/delivery/'.$row->pic_end_order) }}" target="_blank">Ver imagen de entrega</a><hr>
+            <a href="{{ Asset('/upload/order/delivery/delivery_end_'.$row->id.'.jpg') }}" target="_blank">Ver imagen de entrega</a><hr>
         </div>
     </div>
 @else
