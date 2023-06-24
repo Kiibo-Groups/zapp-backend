@@ -169,6 +169,14 @@ Route::group(array('namespace' => 'Api'), function () {
     Route::get('getItemWeb/{id}','ApiController@getItemWeb');
     Route::get('getStoreWeb/{id}','ApiController@getStoreWeb');
 
+
+    /**
+     * 
+     * API para eliminacion de datos
+     * 
+     */
+    Route::post('deleteUserData','ApiController@deleteUserData');
+
     include("dboy.php");
     include("store.php");
 

@@ -1343,4 +1343,43 @@ class ApiController extends Controller {
 		}
 		
 	}
+
+
+	/**
+	 * Funciones para eliminacion de datos del usuario
+	 */
+
+	public function deleteUserData(Request $request)
+	{
+		$user_id = $request->get('user_id');
+
+		// Buscamos si el usuario tiene pedidos activos
+		$orders = Order::where('user_id', $user_id)->whereIn('status',[0,1,3,4])->count();
+		if ($orders > 0) {
+			return response()->json([
+				'success' => false,
+				'code'    => 302,
+				'msg'	  => 'orders_active'
+			]);
+		}
+
+		// Buscamos si el usuario tiene servicios en ruta
+		$comms = Commaned::where('user_id', $user_id)->whereIn('status',[0,1,3,4])->count();
+		if ($comms > 0) {
+			return response()->json([
+				'success' => false,
+				'code'    => 303,
+				'msg'	  => 'service_active'
+			]);
+		}
+
+		// Eliminamos al usuario
+		AppUser::find($user_id)->delete();
+
+		return response()->json([
+			'success' => true,
+			'code'    => 200,
+			'msg'	  => 'user_deleted'
+		]);
+	}
 }
