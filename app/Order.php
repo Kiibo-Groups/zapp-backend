@@ -1040,7 +1040,7 @@ class Order extends Authenticatable
          if (isset($city_id)) {
             
             if ($admin) {
-               if ($admin->city_notify == 0) { // Todas las ciudades
+               if ($admin->city_notify == 100) { // Todas las ciudades
                   // Enviamos los pedidos de la ciudad del Administrador
                   $data[] = [
                      'store'    => User::find($row->store_id)->name,
