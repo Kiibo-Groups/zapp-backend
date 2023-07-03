@@ -30,12 +30,12 @@ class StoreController extends Controller {
 		$l 		 = Language::find($_GET['lid']);
 
 		return response()->json([
-			'data' 		=> $res->storeOrder(),
-			'complete' 	=> $res->storeOrder(6),
+			'data' 		=> isset($_GET['spadmin']) ? $res->storeOrderAdmin() : $res->storeOrder(),
+			'complete' 	=> isset($_GET['spadmin']) ? [] : $res->storeOrder(6),
 			'text'		=> $text->getAppData($_GET['lid']),
 			'admin'		=> Admin::find(1),
 			'app_type'	=> isset($l->id) ? $l->type : 0,
-			'store'		=> User::find($_GET['id']),
+			'store'		=> isset($_GET['spadmin']) ? Admin::find($_GET['id']) : User::find($_GET['id']),
 			'overview'	=> $res->overView(),
 			'dboy'		=> Delivery::where('status',0)->get()
 		]);
