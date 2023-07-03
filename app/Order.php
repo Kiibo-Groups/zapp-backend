@@ -1035,7 +1035,7 @@ class Order extends Authenticatable
         {
 
          $city_id = User::find($row->store_id)->city_id;
-         
+         $price_comm = $row->total- $row->d_charges;
          if ($admin->city_notify == $city_id) {
             // Enviamos los pedidos de la ciudad del Administrador
             $data[] = [
