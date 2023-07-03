@@ -1036,7 +1036,8 @@ class Order extends Authenticatable
 
          $city_id = User::find($row->store_id)->city_id;
          $price_comm = $row->total- $row->d_charges;
-         if (isset($city_id->city_id)) {
+         
+         if (isset($city_id)) {
             
             if ($admin) {
                if ($admin->city_notify == 0) { // Todas las ciudades
@@ -1120,7 +1121,7 @@ class Order extends Authenticatable
                   'store_id' => $row->store_id
                ];
             }
-         }
+         } 
         }
 
         return $data;
