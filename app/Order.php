@@ -1036,32 +1036,90 @@ class Order extends Authenticatable
 
          $city_id = User::find($row->store_id)->city_id;
          $price_comm = $row->total- $row->d_charges;
-         if ($admin->city_notify == $city_id) {
-            // Enviamos los pedidos de la ciudad del Administrador
-            $data[] = [
-               'store'    => User::find($row->store_id)->name,
-               'id'       => $row->id,
-               'name'     => $row->name,
-               'phone'    => $row->phone,
-               'address'  => $row->address,
-               'lat_dest' => $row->lat,
-               'lng_dest' => $row->lng,
-               'lat_orig' => User::find($row->store_id)->lat,
-               'lng_orig' => User::find($row->store_id)->lng,
-               'status'   => $row->status,
-               'd_boy'    => Delivery::find($row->d_boy),
-               'total'    => $price_comm,//$row->total,
-               'd_charges' => $row->d_charges,
-               'real_total' => $item->RealTotal($row->id),
-               'GetTaxes'   => $item->GetTaxes($row->id),
-               'currency' => $admin->currency,
-               'items'    => $item->getItem($row->id),
-               'pay'      => $row->payment_method,
-               'date'     => date('d-M-Y',strtotime($row->created_at)),
-               'type'     => $row->type,
-               'notes'    => $row->notes,
-               'store_id' => $row->store_id
-            ];
+         if (isset($city_id->city_id)) {
+            
+            if ($admin) {
+               if ($admin->city_notify == 0) { // Todas las ciudades
+                  // Enviamos los pedidos de la ciudad del Administrador
+                  $data[] = [
+                     'store'    => User::find($row->store_id)->name,
+                     'store_id' => $row->store_id,
+                     'id'       => $row->id,
+                     'name'     => $row->name,
+                     'phone'    => $row->phone,
+                     'address'  => $row->address,
+                     'lat_dest' => $row->lat,
+                     'lng_dest' => $row->lng,
+                     'lat_orig' => User::find($row->store_id)->lat,
+                     'lng_orig' => User::find($row->store_id)->lng,
+                     'status'   => $row->status,
+                     'd_boy'    => Delivery::find($row->d_boy),
+                     'total'    => $price_comm,//$row->total,
+                     'd_charges' => $row->d_charges,
+                     'real_total' => $item->RealTotal($row->id),
+                     'GetTaxes'   => $item->GetTaxes($row->id),
+                     'currency' => $admin->currency,
+                     'items'    => $item->getItem($row->id),
+                     'pay'      => $row->payment_method,
+                     'date'     => date('d-M-Y',strtotime($row->created_at)),
+                     'type'     => $row->type,
+                     'notes'    => $row->notes
+                  ];
+               }else {
+                  if ($admin->city_notify == $city_id->city_id) {
+                     // Enviamos los pedidos de la ciudad del Administrador
+                     $data[] = [
+                        'store'    => User::find($row->store_id)->name,
+                        'id'       => $row->id,
+                        'name'     => $row->name,
+                        'phone'    => $row->phone,
+                        'address'  => $row->address,
+                        'lat_dest' => $row->lat,
+                        'lng_dest' => $row->lng,
+                        'lat_orig' => User::find($row->store_id)->lat,
+                        'lng_orig' => User::find($row->store_id)->lng,
+                        'status'   => $row->status,
+                        'd_boy'    => Delivery::find($row->d_boy),
+                        'total'    => $price_comm,//$row->total,
+                        'd_charges' => $row->d_charges,
+                        'real_total' => $item->RealTotal($row->id),
+                        'GetTaxes'   => $item->GetTaxes($row->id),
+                        'currency' => $admin->currency,
+                        'items'    => $item->getItem($row->id),
+                        'pay'      => $row->payment_method,
+                        'date'     => date('d-M-Y',strtotime($row->created_at)),
+                        'type'     => $row->type,
+                        'notes'    => $row->notes,
+                        'store_id' => $row->store_id
+                     ];
+                  }
+               }
+            }else {
+               $data[] = [
+                  'store'    => User::find($row->store_id)->name,
+                  'id'       => $row->id,
+                  'name'     => $row->name,
+                  'phone'    => $row->phone,
+                  'address'  => $row->address,
+                  'lat_dest' => $row->lat,
+                  'lng_dest' => $row->lng,
+                  'lat_orig' => User::find($row->store_id)->lat,
+                  'lng_orig' => User::find($row->store_id)->lng,
+                  'status'   => $row->status,
+                  'd_boy'    => Delivery::find($row->d_boy),
+                  'total'    => $price_comm,//$row->total,
+                  'd_charges' => $row->d_charges,
+                  'real_total' => $item->RealTotal($row->id),
+                  'GetTaxes'   => $item->GetTaxes($row->id),
+                  'currency' => $admin->currency,
+                  'items'    => $item->getItem($row->id),
+                  'pay'      => $row->payment_method,
+                  'date'     => date('d-M-Y',strtotime($row->created_at)),
+                  'type'     => $row->type,
+                  'notes'    => $row->notes,
+                  'store_id' => $row->store_id
+               ];
+            }
          }
         }
 
