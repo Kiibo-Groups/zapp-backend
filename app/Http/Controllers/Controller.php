@@ -106,7 +106,6 @@ class Controller extends BaseController
        
 	    return $response;
 	}
- 
 
 	// Comercios
 	function sendPushS($title,$description,$uid = 0)
@@ -172,7 +171,7 @@ class Controller extends BaseController
 		}
 
 		$fields = array(
-			'app_id' => "app_id",
+			'app_id' => "d1cee5a5-2ac3-499c-a6af-6845eea1a849",
 			'included_segments' => array('All'),
 			'data' => array("foo" => "bar"),
 			'filters' => [$daTags],
@@ -187,7 +186,7 @@ class Controller extends BaseController
 
 		curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json',
-		'Authorization: Basic token'));
+		'Authorization: Basic MTMzOGRmNWUtZmFmMC00ZDkxLTkzMTQtYjc1ZjllODk4OGMz'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 		curl_setopt($ch, CURLOPT_POST, TRUE);

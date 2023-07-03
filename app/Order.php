@@ -161,6 +161,13 @@ class Order extends Authenticatable
             app('App\Http\Controllers\Controller')->sendPushS($title,$msg,$store->id);
          /** Enviamos Notificacion al negocio */
 
+         /** Enviamos Notificacion al SuperAdmin */
+            $msg = " 🎉 Nuevo pedido recibido 🎉 #".$add->id.", del negocio ".$store->name;
+            $title = "Nuevo pedido recibido!!";
+
+            app('App\Http\Controllers\Controller')->sendPushAdmin($title,$msg,$admin->id);
+         /** Enviamos Notificacion al SuperAdmin */
+
          /** Agregamos el servicio a Firebase */
             try {
                $return = array(
@@ -969,7 +976,6 @@ class Order extends Authenticatable
         foreach($res as $row)
         {
 
-
          $price_comm = $row->total- $row->d_charges;
 
           $data[] = [
@@ -992,7 +998,8 @@ class Order extends Authenticatable
             'pay'      => $row->payment_method,
             'date'     => date('d-M-Y',strtotime($row->created_at)),
             'type'     => $row->type,
-            'notes'    => $row->notes
+            'notes'    => $row->notes,
+            'store_id' => $row->store_id
           ];
         }
 
