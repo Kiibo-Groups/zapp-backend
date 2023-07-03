@@ -1067,7 +1067,7 @@ class Order extends Authenticatable
                      'notes'    => $row->notes
                   ];
                }else {
-                  if ($admin->city_notify == $city_id->city_id) {
+                  if ($admin->city_notify == $city_id) {
                      // Enviamos los pedidos de la ciudad del Administrador
                      $data[] = [
                         'store'    => User::find($row->store_id)->name,
