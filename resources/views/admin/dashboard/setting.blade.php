@@ -186,6 +186,18 @@
                                 </div>
                             </div>
 
+                            <h4>App Versión IOS<br /><small style="font-size: 12px">(Introduce la Versión de las app's en <a href="https://apps.apple.com/br/app/zapp-logistica/id1610368026" target="_blank">AppStore - Zapp Store</a> )</small></h4>
+                            <div class="card py-3 m-b-30">
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="app_version_ios">App Versión Usuarios</label>
+                                            <input type="text" class="form-control" id="app_version_ios" name="app_version_ios" value="{{ $data->app_version_ios }}">
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+
                             <h4>Social Links</h4>
                             <div class="card py-3 m-b-30">
                             <div class="card-body">

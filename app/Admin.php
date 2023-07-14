@@ -91,8 +91,14 @@ class Admin extends Authenticatable
 		$update->stripe_api_id 		= isset($data['stripe_api_id']) ? $data['stripe_api_id'] : null;
 		$update->ApiKey_google   	= isset($data['ApiKey_google']) ? $data['ApiKey_google'] : null;
 		$update->google_tacker_id  	= isset($data['google_tacker_id']) ? $data['google_tacker_id'] : null;
+		
+		// Versiones de android
 		$update->app_version        = isset($data['app_version']) ? $data['app_version'] : '0';
 		$update->app_version_staff  = isset($data['app_version_staff']) ? $data['app_version_staff'] : '0';
+
+		// Versiones de IOS
+		$update->app_version_ios    = isset($data['app_version_ios']) ? $data['app_version_ios'] : '0.0.0';
+ 
 		$update->comm_stripe   	    = isset($data['comm_stripe']) ? $data['comm_stripe'] : null;
 		$update->send_terminal      = isset($data['send_terminal']) ? $data['send_terminal'] : 0;
 		$update->max_cash 			= isset($data['max_cash']) ? $data['max_cash'] : 0;
