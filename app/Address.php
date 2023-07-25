@@ -18,11 +18,13 @@ class Address extends Authenticatable
     {
         
         $uid            = $data['user_id'];
-        $user           = User::find($uid);
         $add            = ($data['add_or_upd'] == 'new') ? new Address : Address::find($data['add_or_upd']);
         $add->user_id   = $uid;
         
-        $add->name_who_receives     = isset($data['name_who_receives']) ? $data['name_who_receives'] : AppUser::find($data['user_id'])->name;
+
+        $name_who_receives  = isset(AppUser::find($data['user_id'])->name) ? AppUser::find($data['user_id'])->name : 'undefined';
+
+        $add->name_who_receives     = isset($data['name_who_receives']) ? $data['name_who_receives'] : $name_who_receives ;
         $add->cp                    = isset($data['cp']) ? $data['cp'] : 0;
         $add->state                 = isset($data['state']) ? $data['state'] : 'Colombia';
         $add->municipality          = isset($data['municipality']) ? $data['municipality'] : 'Undefined';
