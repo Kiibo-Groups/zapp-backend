@@ -105,6 +105,15 @@ class Commaned extends Authenticatable
             $add->save();
         /** Agregamos el servicio a Firebase */
 
+        /** Enviamos Notificacion al SuperAdmin */
+        
+        $admin = Admin::find(1);
+        $msg = " 🎉 Nueva solicitude de servicio 🎉 #".$add->id;
+        $title = "Nueva solicitud de servicio!!";
+
+        app('App\Http\Controllers\Controller')->sendPushAdmin($title,$msg,$admin->id);
+        /** Enviamos Notificacion al SuperAdmin */
+
         if (isset($data['order_store']) && $data['order_store'] == true) {
             // Es un pedido directo a negocio, Solicitamos link para Whatsapp            
             $url_wt = $this->addNewWhatsapp($data,$add);

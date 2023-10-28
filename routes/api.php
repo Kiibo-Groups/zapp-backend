@@ -139,6 +139,7 @@ Route::group(array('namespace' => 'Api'), function () {
     Route::get('GenerateToken','ApiController@GenerateToken');
     Route::post('CreateTokenWompi','ApiController@CreateTokenWompi');
     Route::post('CreateTransactions','ApiController@CreateTransactions');
+    Route::get('chkTransaction/{id}','ApiController@chkTransaction');
 
     /**
      * 

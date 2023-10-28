@@ -154,8 +154,7 @@
 
 	let url = "{{ (!$data->id) ? env('user').'/item' : env('user').'/item/update' }}";  
 	let method = "{{ (!$data->id) ? 'POST' : 'POST' }}";  
-	
-	console.log(url);
+	 
     myDropzone = new Dropzone('div#imageUpload', {
         addRemoveLinks: true,
         autoProcessQueue: false,

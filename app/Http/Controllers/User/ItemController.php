@@ -95,7 +95,7 @@ class ItemController extends Controller {
 	/*
 	|---------------------------------------
 	|@Save data in DB
-	|---------------------------------------
+	|---------------_import------------------------
 	*/
 	public function store(Request $Request)
 	{			

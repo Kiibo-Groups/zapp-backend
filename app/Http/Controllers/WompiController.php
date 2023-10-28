@@ -15,11 +15,17 @@ class WompiController extends BaseController
 
     private $public_key;
     private $private_key;
+    // private $endpoint = "https://sandbox.wompi.co";  
     private $endpoint = "https://production.wompi.co";
 
     public function __construct()
     {
-        $this->public_key = "pub_prod_lGYxHGF1deVzub3xFeFqx4UzemCJdgsj";
+        // SANBOX
+        // $this->public_key =  "pub_test_5Enp6ZKbOWv03quRyb6FRwhIOhC73vi0";
+        // $this->private_key = "prv_test_cdYPSIxTv3szifq7UMORy4iKNXZywIvb";
+
+        // PRODUCTION
+        $this->public_key =  "pub_prod_lGYxHGF1deVzub3xFeFqx4UzemCJdgsj";
         $this->private_key = "prv_prod_nGfgjkadFepIDxxVVozm9UEHyGbKD898";
     }
 
@@ -59,6 +65,12 @@ class WompiController extends BaseController
         return $this->CurlRequest($fields,"POST","/v1/transactions/");
     }
 
+    // Verificamos la transaccion realizada
+    function chkTransaction($id)
+    {
+        return $this->CurlRequest([],"GET","/v1/transactions/".$id);
+    }
+
     /**
      * Request de CURL
      */
@@ -90,5 +102,4 @@ class WompiController extends BaseController
 
         return $req;
     }
-
 }

@@ -1029,9 +1029,19 @@ class ApiController extends Controller {
 		
 		try {
 			$wompi = new WompiController;
-			return response()->json(['data' => $wompi->CreateTransactions($Request->all())]);
+			return response()->json(['status' => true,'data' => $wompi->CreateTransactions($Request->all())]);
 		} catch (\Exception $th) {
-			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+			return response()->json(['status' => false,'data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
+	public function chkTransaction($id)
+	{
+		try {
+			$wompi = new WompiController;
+			return response()->json(['status' => true, 'data' => $wompi->chkTransaction($id)]);
+		} catch (\Exception $th) {
+			return response()->json(['status' => false, 'data' => 'error','error' => $th->getMessage()]);
 		}
 	}
 

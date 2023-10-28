@@ -130,8 +130,8 @@ class Order extends Authenticatable
 
          /** Generamos Codigo de entrega */
             $key = '';
-            $pattern = $add->id.'1234567890';
-            $key = substr(md5($pattern),0,3);
+            $permitted_chars = $add->id.'0123456789';
+            $key = substr(str_shuffle($permitted_chars), 0, 3);
             // Guardamos
             $add->code_order = strtoupper($key);
             $add->save();
