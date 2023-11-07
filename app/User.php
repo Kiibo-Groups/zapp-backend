@@ -1340,7 +1340,7 @@ class User extends Authenticatable
         $data     = [];
         $init       = isset($_GET['init']) ? $_GET['init'] : 0;
         // where('status',0)->
-        $cates    = Item::where('store_id',$id)->select('category_id')->skip(10)->take($init)->distinct()->get();
+        $cates    = Item::where('store_id',$id)->select('category_id')->skip(5)->take($init)->distinct()->get();
         $price    = 0;
         $last_price = 0;
         
