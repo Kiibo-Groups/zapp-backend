@@ -408,21 +408,20 @@ class User extends Authenticatable
             /****** Obtenemos las visitas *******/
                 $visits = Visits::where('user_id',$user_id)->where('store_id',$id)->first();
             /****** Obtenemos las visitas *******/
- 
 
             /****** Rating *******/
                 $totalRate    = Rate::where('store_id',$row->id)->count();
                 $totalRateSum = Rate::where('store_id',$row->id)->sum('star');
+           
+                if($totalRate > 0)
+                {
+                    $avg          = $totalRateSum / $totalRate;
+                }
+                else
+                {
+                    $avg           = 0 ;
+                }
             /****** Rating *******/
-
-            if($totalRate > 0)
-            {
-                $avg          = $totalRateSum / $totalRate;
-            }
-            else
-            {
-                $avg           = 0 ;
-            }
 
             $data = [
                 'id'            => $row->id,
@@ -1234,7 +1233,7 @@ class User extends Authenticatable
         $data     = [];
         $item     = [];
         // 
-        $cates    = Item::where('store_id',$id)->select('category_id')->distinct()->get();
+        $cates    = Item::where('store_id',$id)->select('category_id')->skip(0)->take(10)->distinct()->get();
         $price    = 0;
         $last_price = 0;
 
@@ -1245,9 +1244,10 @@ class User extends Authenticatable
             ->where('store_id',$id)
             ->where('status',0)
             ->orderBy('sort_no','ASC')
+            
             ->get();
             
-            // ->skip(0)->take(10)
+            // 
             $count = [];
 
             foreach($items as $i)
@@ -1338,12 +1338,13 @@ class User extends Authenticatable
     public function getMoreItems($id)
     {
         $data     = [];
+        $init       = isset($_GET['init']) ? $_GET['init'] : 0;
         // where('status',0)->
-        $cates    = Item::where('store_id',$id)->select('category_id')->distinct()->get();
+        $cates    = Item::where('store_id',$id)->select('category_id')->skip(10)->take($init)->distinct()->get();
         $price    = 0;
         $last_price = 0;
         
-        $init       = isset($_GET['init']) ? $_GET['init'] : 0;
+        
 
         foreach($cates as $cate)
         {
@@ -1351,7 +1352,6 @@ class User extends Authenticatable
             $items = Item::where('category_id',$cate->category_id)
             ->where('store_id',$id)
             ->orderBy('sort_no','ASC')
-            ->skip(10)->take($init)
             ->get();
             $count = [];
 

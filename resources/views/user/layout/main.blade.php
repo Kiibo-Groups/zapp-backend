@@ -119,72 +119,72 @@
 <script src="{{Asset('assets/vendor/sweetalert/sweetalert2.all.min.js') }}"></script>
 
 <script>
-function deleteConfirm(url)
-{
-	Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
+    function deleteConfirm(url)
+    {
+        Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(
+                        'Deleted!',
+                        'This Entry has been deleted.',
+                        'success'
+                    )
+
+                    window.location = url;
+                }
+    })
+    }
+
+    function confirmAlert(url)
+    {
+        Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Do it!'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(
+                        'Changed!',
+                        'This Entry has been Changed.',
+                        'success'
+                    )
+
+                    window.location = url;
+                }
+        });
+    }
+
+    function ClipToDeepLink(link,type) {
+        // Get the text field
+        var copyText = 'https://zappstore.com.co/'+type+'/'+link;
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText);
+
+        // Alert the copied text
+        Swal.fire({
+            title: 'Enlace Listo!!',
+            text: "El enlace se ha copiado al portapapeles.",
+            type: 'success',
+            showCancelButton: false,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Listo!'
         }).then((result) => {
-            if (result.value) {
-                Swal.fire(
-                    'Deleted!',
-                    'This Entry has been deleted.',
-                    'success'
-                )
-
-                window.location = url;
-            }
-  })
-}
-
-function confirmAlert(url)
-{
-	Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Do it!'
-        }).then((result) => {
-            if (result.value) {
-                Swal.fire(
-                    'Changed!',
-                    'This Entry has been Changed.',
-                    'success'
-                )
-
-                window.location = url;
-            }
-    });
-}
-
-function ClipToDeepLink(link,type) {
-    // Get the text field
-    var copyText = 'https://zappstore.com.co/'+type+'/'+link;
-
-    // Copy the text inside the text field
-    navigator.clipboard.writeText(copyText);
-
-    // Alert the copied text
-    Swal.fire({
-        title: 'Enlace Listo!!',
-        text: "El enlace se ha copiado al portapapeles.",
-        type: 'success',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Listo!'
-    }).then((result) => {
-        // window.location = url;
-    });
-} 
+            // window.location = url;
+        });
+    } 
 </script>
 
 @yield('js')
