@@ -1233,7 +1233,7 @@ class User extends Authenticatable
         $data     = [];
         $item     = [];
         // 
-        $cates    = Item::where('store_id',$id)->select('category_id')->skip(0)->take(10)->distinct()->get();
+        $cates    = Item::where('store_id',$id)->select('category_id')->skip(0)->take(5)->distinct()->get();
         $price    = 0;
         $last_price = 0;
 
